@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/microservice-books-club/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/microservice-books-club/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/microservice-books-club",
+  "projects": {
+    "microservice-books-club": {
+      "type": "application",
+      "root": "apps/microservice-books-club",
+      "entryFile": "main",
+      "sourceRoot": "apps/microservice-books-club/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/microservice-books-club/tsconfig.app.json"
+      }
+    },
+    "api-gateway": {
+      "type": "application",
+      "root": "apps/api-gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/api-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+      }
+    },
+    "auth-service": {
+      "type": "application",
+      "root": "apps/auth-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/auth-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/auth-service/tsconfig.app.json"
+      }
+    },
+    "books-service": {
+      "type": "application",
+      "root": "apps/books-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/books-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/books-service/tsconfig.app.json"
+      }
+    },
+    "users-service": {
+      "type": "application",
+      "root": "apps/users-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/users-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/users-service/tsconfig.app.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    }
+  }
+}
