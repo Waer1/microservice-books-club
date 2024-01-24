@@ -13,6 +13,7 @@ async function bootstrap() {
       },
     },
   );
+  console.log('Users service is running');
   await app.listen();
 }
 bootstrap();

@@ -4,7 +4,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const microserviceTcpAuth = app.connectMicroservice<MicroserviceOptions>({
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
       host: 'localhost',
@@ -12,7 +12,7 @@ async function bootstrap() {
     },
   });
 
-  const microserviceTcpUsers = app.connectMicroservice<MicroserviceOptions>({
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
       host: 'localhost',
@@ -20,7 +20,7 @@ async function bootstrap() {
     },
   });
 
-  const microserviceTcpBooks = app.connectMicroservice<MicroserviceOptions>({
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
       host: 'localhost',
