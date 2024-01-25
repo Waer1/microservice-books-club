@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from '@app/shared/filters/http-exception.filter';
 import { ErrorInterceptor } from '@app/shared/interceptors/error.interceptor';
 
 async function bootstrap() {
@@ -44,7 +43,7 @@ async function bootstrap() {
 
   // use http exception filter
   // app.useGlobalFilters(new HttpExceptionFilter());
-  
+
   app.useGlobalInterceptors(new ErrorInterceptor());
 
   await app.startAllMicroservices();

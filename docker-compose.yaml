@@ -12,11 +12,91 @@ services:
       - '15672:15672'
     env_file:
       - .env
+    networks:
+      - books-club-network
+
+
+  postgres:
+    image: postgres
+    hostname: postgres
+    container_name: postgres
+    env_file:
+      - .env
+    # ports:
+    #   - '5432:5432'
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    networks:
+      - books-club-network
+
+  postgres_admin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - '15432:80'
+    networks:
+      - books-club-network
+
+  api:
+    build:
+      context: ./
+      dockerfile: ./apps/microservice-books-club/Dockerfile
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - postgres
+      - auth
+      - books
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev microservice-books-club # overrides CMD from dockerfile
+    networks:
+      - books-club-network
 
   auth:
     build:
       context: ./
-      dockerfile: ./apps/auth/Dockerfile
+      dockerfile: ./apps/auth-service/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - users
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev auth # overrides CMD from dockerfile
+    networks:
+      - books-club-network
+
+  books:
+    build:
+      context: ./
+      dockerfile: ./apps/books-service/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - postgres
+      - auth
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev books-service # overrides CMD from dockerfile
+    networks:
+      - books-club-network
+
+  users:
+    build:
+      context: ./
+      dockerfile: ./apps/users-service/Dockerfile
     env_file:
       - .env
     depends_on:
@@ -25,77 +105,10 @@ services:
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
-    command: npm run start:dev auth # overrides CMD from dockerfile
+    command: npm run start:dev users-service # overrides CMD from dockerfile
+    networks:
+      - books-club-network
 
-  # presence:
-  #   build:
-  #     context: ./
-  #     dockerfile: ./apps/presence/Dockerfile
-  #   ports:
-  #     - '6000:6000'
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - rabbitmq
-  #     - postgres
-  #     - redis
-  #   volumes:
-  #     - .:/usr/src/app # any change to base folder should be reflected
-  #     - /usr/src/app/node_modules
-  #   command: npm run start:dev presence # overrides CMD from dockerfile
-
-  # chat:
-  #   build:
-  #     context: ./
-  #     dockerfile: ./apps/chat/Dockerfile
-  #   ports:
-  #     - '7000:7000'
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - rabbitmq
-  #     - postgres
-  #     - redis
-  #     - presence
-  #   volumes:
-  #     - .:/usr/src/app # any change to base folder should be reflected
-  #     - /usr/src/app/node_modules
-  #   command: npm run start:dev chat # overrides CMD from dockerfile
-
-  # api:
-  #   build:
-  #     context: ./
-  #     dockerfile: ./apps/api/Dockerfile
-  #   ports:
-  #     - '4000:5000'
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - rabbitmq
-  #     - auth
-  #     - presence
-  #   volumes:
-  #     - .:/usr/src/app # any change to base folder should be reflected
-  #     - /usr/src/app/node_modules
-  #   command: npm run start:dev api
-
-  # postgres:
-  #   image: postgres
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '5432:5432'
-  #   volumes:
-  #     - ./db/data:/var/lib/postgresql/data
-
-  # postgres_admin:
-  #   image: dpage/pgadmin4
-  #   depends_on:
-  #     - postgres
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - '15432:80'
 
   # redis:
   #   image: redis
@@ -106,3 +119,7 @@ services:
   #     - 6379:6379
   #   volumes:
   #     - ./redis/data:/data
+
+networks:
+  books-club-network:
+    name: books-club-network
