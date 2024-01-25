@@ -2,13 +2,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity()
+@Entity('book')
 export class Book {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column()
   description: string;

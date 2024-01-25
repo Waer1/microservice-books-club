@@ -8,9 +8,10 @@ import {
   OneToMany,
   CreateDateColumn,
   BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
-import { Book } from './book.entity';
 import { hash } from 'bcrypt';
+import { Book } from './book.entity';
 
 @Entity()
 export class User {
@@ -38,10 +39,21 @@ export class User {
   @OneToMany(() => Book, (book) => book.author)
   writtenList: Book[];
 
+  @Column({ })
+  city: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 6 })
+  latitude: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 6 })
+  longitude: number;
+
+
   @CreateDateColumn()
   createdAt: Date;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     this.password = await hash(this.password, 10);
   }

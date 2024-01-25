@@ -1,10 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { BooksModule } from '../books/books.module';
+import { ErrorInterceptor } from '@app/shared/interceptors/error.interceptor';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [BooksModule],
+  controllers: [],
+  providers: [
+    {
+      provide: 'APP_INTERTCEPTOR',
+      useClass: ErrorInterceptor,
+    },
+  ],
 })
 export class AppModule {}
+
