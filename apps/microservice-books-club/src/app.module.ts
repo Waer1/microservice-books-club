@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { BooksModule } from '../books/books.module';
 import { ErrorInterceptor } from '@app/shared/interceptors/error.interceptor';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [BooksModule],
+  imports: [BooksModule, AuthModule],
   controllers: [],
   providers: [
     {

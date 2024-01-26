@@ -6,6 +6,7 @@ import { ErrorInterceptor } from '@app/shared/interceptors/error.interceptor';
 @Module({
   imports: [
     SharedModule.registerRmq('BOOKS_SERVICE', process.env.RABBITMQ_BOOKS_QUEUE),
+    SharedModule.registerRmq('AUTH_SERVICE', process.env.RABBITMQ_AUTH_QUEUE),
   ],
   controllers: [BooksController],
   providers: [

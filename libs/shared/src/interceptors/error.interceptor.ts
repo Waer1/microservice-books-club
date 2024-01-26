@@ -10,7 +10,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 function doException(err) {
-  console.log(err);
+  console.log('waer error ',err);
   try {
     if (err.status === 'error') {
       return new HttpException('Something went wrong', HttpStatus.BAD_GATEWAY);

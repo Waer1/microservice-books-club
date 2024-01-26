@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     SharedModule,
     TypeOrmModule.forFeature([Book, User]),
+    SharedModule.registerRmq('AUTH_SERVICE', process.env.RABBITMQ_AUTH_QUEUE),
   ],
   controllers: [BooksServiceController],
   providers: [BooksServiceService],

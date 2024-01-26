@@ -1,5 +1,12 @@
 // book.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  AfterInsert,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 
 @Entity('book')
@@ -14,6 +21,9 @@ export class Book {
   description: string;
 
   // A book can have only one author (User)
-  @ManyToOne(() => User, (user) => user.writtenList)
+  @ManyToOne(() => User, (user) => user.writtenBooks, {
+    nullable: false,
+    cascade: ['insert', 'update'],
+  })
   author: User;
 }

@@ -17,6 +17,7 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 })
 export class SharedModule {
   static registerRmq(service: string, queue: string): DynamicModule {
+    console.log('registerRmq', service, queue)
     const providers = [
       {
         provide: service,

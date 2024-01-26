@@ -31,15 +31,18 @@ export class User {
   password: string;
 
   // A user can have multiple books in their reading list
-  @ManyToMany(() => Book)
+  @ManyToMany(() => Book, { eager: true })
   @JoinTable()
-  readingList: Book[];
+  readingBooks: Book[];
 
   // A user can have multiple books as an author
-  @OneToMany(() => Book, (book) => book.author)
-  writtenList: Book[];
+  @OneToMany(() => Book, (book) => book.author, {
+    eager: true,
+    cascade: ['remove', 'update'],
+  })
+  writtenBooks: Book[];
 
-  @Column({ })
+  @Column({ nullable: true })
   city: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 6 })
@@ -48,13 +51,6 @@ export class User {
   @Column({ type: 'decimal', precision: 10, scale: 6 })
   longitude: number;
 
-
   @CreateDateColumn()
   createdAt: Date;
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword() {
-    this.password = await hash(this.password, 10);
-  }
 }
