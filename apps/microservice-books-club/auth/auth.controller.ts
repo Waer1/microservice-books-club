@@ -67,8 +67,6 @@ export class AuthController {
     }
     relocateDto.userId = req.user.id;
 
-    console.log('relocateDto', relocateDto);
-
     return this.authService.send(
       {
         cmd: 'RelocateMe',

@@ -34,7 +34,6 @@ export class UserInterceptor implements NestInterceptor {
 
     return this.authService.send<UserJwt>({ cmd: 'decode-jwt' }, { jwt }).pipe(
       switchMap(({ user }) => {
-        console.log('user inside pipe', user);
         request.user = user;
         return next.handle();
       }),

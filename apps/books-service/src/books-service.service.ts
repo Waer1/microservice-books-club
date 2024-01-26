@@ -64,7 +64,6 @@ export class BooksServiceService {
   async updateBook(data: UpdateBookDto): Promise<Book> {
     const { BookId, updates, ownerId } = data;
 
-    console.log('BookId', BookId);
     // Check if the user is the author of the book
     const existingBook = await this.getBookById(BookId);
 

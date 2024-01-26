@@ -18,14 +18,11 @@ export class RpcExceptionInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       catchError((exception) => {
-        console.log('exception before', exception);
 
         if (exception instanceof RpcException) {
           // If the exception is already an object response, rethrow it
           throw exception;
         }
-
-        console.log('exception after', exception);
 
         throw new RpcException({
           statusCode: exception.getStatus(),

@@ -98,8 +98,6 @@ export class AuthServiceService {
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    console.log('password', password);
-    console.log('hashedPassword', hashedPassword);
     return bcrypt.compare(password, hashedPassword);
   }
 

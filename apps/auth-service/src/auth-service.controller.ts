@@ -49,7 +49,6 @@ export class AuthServiceController {
 
   @MessagePattern({ cmd: 'login' })
   async login(@Ctx() context: RmqContext, @Payload() existingUser: LoginDto) {
-    console.log('login from auth service controller');
     this.sharedService.acknowledgeMessage(context);
 
     return this.authServiceService.login(existingUser);
