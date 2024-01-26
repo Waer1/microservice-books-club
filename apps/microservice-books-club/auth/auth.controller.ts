@@ -35,14 +35,12 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() createUserdto: CreateUserDto) {
-    return this.authService
-      .send(
-        {
-          cmd: 'register',
-        },
-        createUserdto,
-      )
-      .pipe(catchError((val) => of({ error: val.message })));
+    return this.authService.send(
+      {
+        cmd: 'register',
+      },
+      createUserdto,
+    );
   }
 
   @Post('login')
@@ -54,11 +52,7 @@ export class AuthController {
         },
         logindto,
       )
-      .pipe(
-        catchError((val) => {
-          return of({ error: val });
-        }),
-      );
+      ;
   }
 
   @Post('RelocateMe')

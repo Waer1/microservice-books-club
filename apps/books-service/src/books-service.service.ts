@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, throwError } from 'rxjs';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -28,6 +28,7 @@ export class BooksServiceService {
   async findBookById(id: number): Promise<Book> {
     const book = await this.bookRepository.findOne({
       where: { id },
+      relations: ['author'],
     });
     if (!book) {
       throw new RpcException(
@@ -66,15 +67,15 @@ export class BooksServiceService {
     console.log('BookId', BookId);
     // Check if the user is the author of the book
     const existingBook = await this.getBookById(BookId);
-    console.log('existingBook', existingBook);
+
     if (existingBook.author.id !== ownerId) {
-      throw new UnauthorizedException('You are not the author of this book');
+      throw new RpcException(
+        new UnauthorizedException('You are not the author of this book'),
+      );
     }
 
-    console.log('existingBook', existingBook);
     Object.assign(existingBook, updates);
 
-    console.log('return ');
     return await this.bookRepository.save(existingBook);
   }
 
@@ -84,7 +85,9 @@ export class BooksServiceService {
     // Check if the user is the author of the book
     const existingBook = await this.getBookById(BookId);
     if (existingBook.author.id !== ownerId) {
-      throw new UnauthorizedException('You are not the author of this book');
+      throw new RpcException(
+        new UnauthorizedException('You are not the author of this book'),
+      );
     }
 
     await this.bookRepository.delete({ id: BookId });
@@ -111,19 +114,30 @@ export class BooksServiceService {
   }
 
   async readBook(data: ReadBookDto) {
-    const { bookId , userId } = data;
+    const { bookId, userId } = data;
 
-    console.log('1')
     // Check if the user is the author of the book
     const existingBook = await this.getBookById(bookId);
 
-    console.log('2', existingBook)
-    const redinglist = this.authServiceClient.send(
-      { cmd: 'add-to-my-readlist' },
-      { userId: userId, book: existingBook },
-    );
+    if (existingBook.author.id === userId) {
+      throw new RpcException(
+        new BadRequestException('You cannot read your own book'),
+      );
+    }
 
-    console.log('3')
+    delete existingBook.author;
+
+    const redinglist = this.authServiceClient
+      .send(
+        { cmd: 'add-to-my-readlist' },
+        { userId: userId, book: existingBook },
+      )
+      .pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
+
     return redinglist;
   }
 

@@ -70,7 +70,6 @@ export class AuthServiceService {
 
     const existingUser = await this.findByEmail(email);
 
-    console.log('existingUser', existingUser);
     if (existingUser) {
       throw new RpcException(
         new ConflictException('An account with that email already exists!'),
@@ -215,11 +214,21 @@ export class AuthServiceService {
     } catch (error) {
       throw new RpcException(new RequestTimeoutException());
     }
-    const updatedUser = await this.usersRepository.update(userId, {
+    // Preload the user with the new values
+    const updatedUser = await this.usersRepository.preload({
+      id: userId,
       latitude,
       longitude,
       city: city.city,
     });
+
+    // Check if the user was found and preloaded
+    if (!updatedUser) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    // Save the updated user
+    await this.usersRepository.save(updatedUser);
 
     return updatedUser;
   }
