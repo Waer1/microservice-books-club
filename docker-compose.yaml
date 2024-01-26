@@ -48,7 +48,7 @@ services:
   api:
     build:
       context: ./
-      dockerfile: ./apps/microservice-books-club/Dockerfile
+      dockerfile: ./apps/microservice-books-club/Dockerfile.dev
     ports:
       - '3000:3000'
     env_file:
@@ -68,7 +68,7 @@ services:
   auth:
     build:
       context: ./
-      dockerfile: ./apps/auth-service/Dockerfile
+      dockerfile: ./apps/auth-service/Dockerfile.dev
     env_file:
       - .env
     depends_on:
@@ -83,7 +83,7 @@ services:
   books:
     build:
       context: ./
-      dockerfile: ./apps/books-service/Dockerfile
+      dockerfile: ./apps/books-service/Dockerfile.dev
     env_file:
       - .env
     depends_on:
