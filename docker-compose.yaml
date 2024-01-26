@@ -28,6 +28,11 @@ services:
       - ./db/data:/var/lib/postgresql/data
     networks:
       - books-club-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
 
   postgres_admin:
     image: dpage/pgadmin4
@@ -68,7 +73,6 @@ services:
       - .env
     depends_on:
       - rabbitmq
-      - users
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -90,22 +94,6 @@ services:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
     command: npm run start:dev books-service # overrides CMD from dockerfile
-    networks:
-      - books-club-network
-
-  users:
-    build:
-      context: ./
-      dockerfile: ./apps/users-service/Dockerfile
-    env_file:
-      - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-    volumes:
-      - .:/usr/src/app # any change to base folder should be reflected
-      - /usr/src/app/node_modules
-    command: npm run start:dev users-service # overrides CMD from dockerfile
     networks:
       - books-club-network
 

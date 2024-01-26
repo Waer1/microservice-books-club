@@ -1,5 +1,6 @@
-import { User } from '@app/shared';
+import { Book, User } from '@app/shared';
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -10,17 +11,24 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { compareSync } from 'bcrypt';
-import { TimeoutError, catchError, throwError, timeout } from 'rxjs';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from '@app/shared/dtos/Create-User.dto';
 import { UserJwt } from '@app/shared/interfaces/user-jwt.interface';
 import { LoginDto } from '@app/shared/dtos/login.dto';
-
+import { RelocateMeDto } from '@app/shared/dtos/relocateme.dto';
+import * as NodeGeocoder from 'node-geocoder';
+import { ReadBookDto } from '@app/shared/dtos/readBook.dto';
 @Injectable()
 export class AuthServiceService {
+  options: NodeGeocoder.Options = {
+    provider: 'geocodio',
+    apiKey: this.configService.get('GEOCODIO_API_KEY'),
+  };
+
+  geocoder = NodeGeocoder(this.options);
+
   constructor(
     private readonly jwtService: JwtService,
     @InjectRepository(User)
@@ -71,15 +79,17 @@ export class AuthServiceService {
 
     const hashedPassword = await this.hashPassword(password);
 
+    const city = await this.getLocation(latitude, longitude);
+
     const savedUser = await this.usersRepository.save({
       firstName,
       lastName,
       email,
       latitude,
       longitude,
+      city: city.city,
       password: hashedPassword,
     });
-    console.log('savedUser', savedUser);
 
     delete savedUser.password;
     return savedUser;
@@ -116,7 +126,9 @@ export class AuthServiceService {
     const user = await this.validateUser(email, password);
 
     if (!user) {
-      throw new RpcException(new UnauthorizedException());
+      throw new RpcException(
+        new UnauthorizedException('Invalid Email or Password'),
+      );
     }
 
     delete user.password;
@@ -143,7 +155,7 @@ export class AuthServiceService {
     if (!jwt) return;
 
     try {
-      const user = this.jwtService.decode(jwt) as UserJwt
+      const user = this.jwtService.decode(jwt) as UserJwt;
       return user;
     } catch (error) {
       throw new RpcException(error);
@@ -159,5 +171,97 @@ export class AuthServiceService {
     } catch (error) {
       throw new RpcException(error);
     }
+  }
+
+  /**
+   * Gets the location of a point based on latitude and longitude.
+   *
+   * @param {number} latitude The latitude of the point.
+   * @param {number} longitude The longitude of the point.
+   *
+   * @return {Promise<{city: string, country: string}>} The city and country of the point.
+   */
+  async getLocation(
+    latitude: number,
+    longitude: number,
+  ): Promise<{ city: string; country: string }> {
+    // Call the geocoder service with the given latitude and longitude
+
+    const res = await this.geocoder.reverse({
+      lat: latitude,
+      lon: longitude,
+    });
+
+    // If no results, return "Unknown" for city and country
+    if (res.length === 0) {
+      return {
+        city: 'Unknown',
+        country: 'Unknown',
+      };
+    }
+
+    // Return an object with the city and country from the first result
+    return {
+      city: res[0].city,
+      country: res[0].country,
+    };
+  }
+
+  async relocateMe(relocateDto: RelocateMeDto) {
+    const { userId, latitude, longitude } = relocateDto;
+    let city = null;
+    try {
+      city = await this.getLocation(latitude, longitude);
+    } catch (error) {
+      throw new RpcException(new RequestTimeoutException());
+    }
+    const updatedUser = await this.usersRepository.update(userId, {
+      latitude,
+      longitude,
+      city: city.city,
+    });
+
+    return updatedUser;
+  }
+
+  async addToMyReadList(userId: number, book: Book) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ['readingBooks'],
+    });
+
+    if (user.readingBooks.some((readingBook) => readingBook.id === book.id)) {
+      throw new RpcException(
+        new BadRequestException('You have already read this book'),
+      );
+    }
+    user.readingBooks.push(book);
+    await this.usersRepository.save(user);
+    return user;
+  }
+
+  async getMyReadList(userId: number) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ['readingBooks'],
+    });
+    return user.readingBooks;
+  }
+
+  async myInfo(userId: number) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: {
+        readingBooks: true,
+        writtenBooks: true,
+      },
+    });
+    return user;
   }
 }

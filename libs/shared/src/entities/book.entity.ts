@@ -20,10 +20,9 @@ export class Book {
   @Column()
   description: string;
 
-  // A book can have only one author (User)
   @ManyToOne(() => User, (user) => user.writtenBooks, {
     nullable: false,
-    cascade: ['insert', 'update'],
+    cascade: ['update'],
   })
   author: User;
 }

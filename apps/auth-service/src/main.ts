@@ -3,6 +3,7 @@ import { AuthServiceModule } from './auth-service.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { SharedService } from '@app/shared';
+import { RpcExceptionInterceptor } from '@app/shared/filters/RPCFilter.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthServiceModule);

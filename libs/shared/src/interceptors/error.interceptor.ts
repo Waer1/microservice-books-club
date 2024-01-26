@@ -9,28 +9,6 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-function doException(err) {
-  console.log('waer error ',err);
-  try {
-    if (err.status === 'error') {
-      return new HttpException('Something went wrong', HttpStatus.BAD_GATEWAY);
-    } else {
-      var error = err.message;
-
-      if (err.error) {
-        error = err.error;
-      }
-
-      if (err.response && err.response.error) {
-        error = err.response.error;
-      }
-
-    }
-  } catch {
-    return new HttpException('Something went wrong', HttpStatus.BAD_GATEWAY);
-  }
-}
-
 @Injectable()
 export class ErrorInterceptor implements NestInterceptor {
   intercept(
@@ -39,7 +17,8 @@ export class ErrorInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       catchError((err) => {
-        return throwError(doException(err));
+        console.log('ereror interceptor', err);
+        return throwError(() => err.response);;
       }),
     );
   }

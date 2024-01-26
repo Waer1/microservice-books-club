@@ -1,13 +1,9 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class RelocateMeDto   {
+export class ReadBookDto {
   @IsNotEmpty()
   @IsNumber()
-  latitude: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  longitude: number;
+  bookId: number;
 
   userId: number;
 }

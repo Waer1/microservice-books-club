@@ -30,14 +30,11 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  // A user can have multiple books in their reading list
   @ManyToMany(() => Book, { eager: true })
   @JoinTable()
   readingBooks: Book[];
 
-  // A user can have multiple books as an author
   @OneToMany(() => Book, (book) => book.author, {
-    eager: true,
     cascade: ['remove', 'update'],
   })
   writtenBooks: Book[];

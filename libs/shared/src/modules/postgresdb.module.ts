@@ -14,7 +14,6 @@ import { join } from 'path';
         const DATABASE_USER = configService.get('DB_USERNAME');
         const DATABASE_PASSWORD = configService.get('DB_PASSWORD');
         const DATABASE_NAME = configService.get('DB_NAME');
-        console.log('DATABASE_HOST', DATABASE_HOST)
         return {
           type: 'postgres',
           host: DATABASE_HOST,

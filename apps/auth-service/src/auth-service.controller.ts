@@ -9,13 +9,16 @@ import {
 import { LoginDto } from '@app/shared/dtos/login.dto';
 import { CreateUserDto } from '@app/shared/dtos/Create-User.dto';
 import { JwtGuard } from './jwt.guard';
-import { SharedService } from '@app/shared';
+import { Book, SharedService } from '@app/shared';
+import { RelocateMeDto } from '@app/shared/dtos/relocateme.dto';
+import { ReadBookDto } from '@app/shared/dtos/readBook.dto';
 
 @Controller()
 export class AuthServiceController {
-  constructor(private readonly authServiceService: AuthServiceService,
-    private readonly sharedService: SharedService
-    ) {}
+  constructor(
+    private readonly authServiceService: AuthServiceService,
+    private readonly sharedService: SharedService,
+  ) {}
 
   @MessagePattern({ cmd: 'get-users' })
   async getUsers(@Ctx() context: RmqContext) {
@@ -73,6 +76,35 @@ export class AuthServiceController {
     return await this.authServiceService.getUserFromHeader(payload.jwt);
   }
 
+  @MessagePattern({ cmd: 'RelocateMe' })
+  async relocateMe(
+    @Ctx() context: RmqContext,
+    @Payload() relocateDto: RelocateMeDto,
+  ) {
+    this.sharedService.acknowledgeMessage(context);
 
+    return await this.authServiceService.relocateMe(relocateDto);
+  }
 
+  @MessagePattern({ cmd: 'add-to-my-readlist' })
+  async addToMyReadList(
+    @Ctx() context: RmqContext,
+    @Payload() data: { userId: number; book: Book },
+  ) {
+    this.sharedService.acknowledgeMessage(context);
+    const { userId, book } = data;
+    return await this.authServiceService.addToMyReadList(userId, book);
+  }
+
+  @MessagePattern({ cmd: 'get-my-readlist' })
+  async getMyReadList(@Ctx() context: RmqContext, @Payload() userId: number) {
+    this.sharedService.acknowledgeMessage(context);
+    return await this.authServiceService.getMyReadList(userId);
+  }
+
+  @MessagePattern({ cmd: 'myInfo'})
+  async myInfo(@Ctx() context: RmqContext, @Payload() userId: number) {
+    this.sharedService.acknowledgeMessage(context);
+    return await this.authServiceService.myInfo(userId);
+  }
 }
