@@ -1,0 +1,84 @@
+name: Build and Deploy to GKE
+
+on:
+  push:
+# #     branches: ["master"]
+
+defaults:
+  run:
+    working-directory: .
+
+env:
+  PROJECT_ID: appname
+  GAR_LOCATION: us-central1
+  GKE_CLUSTER: appname-backend-autopilot
+  GKE_ZONE: us-central1-c
+  DEPLOYMENT_NAME: appname-backend-autopilot-deployment
+  REPOSITORY: appname-backend-1
+  IMAGE: appname-app
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: true
+          token: ${{ secrets.THE_GITHUB_TOKEN }}
+
+      #Alternative option - authentication via credentials json
+      - id: auth
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
+      - run: |-
+          gcloud --quiet auth configure-docker
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - name: Set up GKE credentials
+        uses: google-github-actions/get-gke-credentials@v0
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+
+      - name: Configure gke-plugin
+        run: |
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+          sudo apt update
+          sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
+      # Build the Docker image
+      - name: Build
+        run: |-
+          docker build \
+            --tag "gcr.io/appname-app/github.com/repo/appname-backend:latest" \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" \
+            .
+
+      - name: Setup repository
+        run: |-
+          gcloud auth configure-docker \
+              us-central1-docker.pkg.dev
+
+      # Push the Docker image to Google Artifact Registry
+      - name: Publish
+        run: |-
+          docker push "gcr.io link"
+
+      # Deploy
+      - name: Apply deployment
+        run: |
+          kubectl apply -f ../kubernetes/kubernetes.yaml
+          kubectl rollout restart deployment appname-backend-autopilot-deployment

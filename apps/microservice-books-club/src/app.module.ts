@@ -2,14 +2,19 @@ import { Module } from '@nestjs/common';
 import { BooksModule } from '../books/books.module';
 import { ErrorInterceptor } from '@app/shared/interceptors/error.interceptor';
 import { AuthModule } from '../auth/auth.module';
-
-@Module({
-  imports: [BooksModule, AuthModule],
+import { PrometheusModule } from "@willsoto/nestjs-prometheus";
+import { LoggingInterceptor } from '@app/shared/interceptors/logging.interceptor';
+  @Module({
+  imports: [BooksModule, AuthModule, PrometheusModule.register()],
   controllers: [],
   providers: [
     {
       provide: 'APP_INTERTCEPTOR',
       useClass: ErrorInterceptor,
+    },
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: LoggingInterceptor,
     },
   ],
 })
