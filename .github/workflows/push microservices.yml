@@ -6,8 +6,8 @@ name: Push micro Services
 on:
   push:
     branches:
-      - main
-      
+      - master
+
 jobs:
   build-and-publish-auth:
     runs-on: ubuntu-latest
