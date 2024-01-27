@@ -34,10 +34,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           build-args: APP=auth-service
+          tags: ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
 
   build-and-publish-books:
     runs-on: ubuntu-latest
@@ -67,6 +67,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           build-args: APP=books-service
+          tags: ${{ secrets.DOCKER_USERNAME }}/books-service:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -99,6 +100,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           build-args: APP=microservice-books-club-service
+          tags: ${{ secrets.DOCKER_USERNAME }}/microservice-books-club-service:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
