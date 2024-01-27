@@ -18,8 +18,8 @@ import { CreateUserDto } from '@app/shared/dtos/Create-User.dto';
 import { UserJwt } from '@app/shared/interfaces/user-jwt.interface';
 import { LoginDto } from '@app/shared/dtos/login.dto';
 import { RelocateMeDto } from '@app/shared/dtos/relocateme.dto';
-import * as NodeGeocoder from 'node-geocoder';
-import { ReadBookDto } from '@app/shared/dtos/readBook.dto';
+import NodeGeocoder from 'node-geocoder';
+
 @Injectable()
 export class AuthServiceService {
   options: NodeGeocoder.Options = {

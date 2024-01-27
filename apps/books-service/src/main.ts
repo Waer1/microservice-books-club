@@ -14,5 +14,6 @@ async function bootstrap() {
 
   app.connectMicroservice(sharedService.getRmqOptions(queue));
   app.startAllMicroservices();
+  console.log(`Books service is listening to queue ${queue}`);
 }
 bootstrap();
