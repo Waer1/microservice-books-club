@@ -2,7 +2,7 @@ name: Build and Deploy to GKE
 
 on:
   push:
-# #     branches: ["master"]
+    branches: ['nonexist']
 
 defaults:
   run:
@@ -24,8 +24,8 @@ jobs:
     environment: production
 
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: 'read'
+      id-token: 'write'
 
     steps:
       - name: Checkout
@@ -36,9 +36,9 @@ jobs:
 
       #Alternative option - authentication via credentials json
       - id: auth
-        uses: "google-github-actions/auth@v0"
+        uses: 'google-github-actions/auth@v0'
         with:
-          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
       - run: |-
           gcloud --quiet auth configure-docker

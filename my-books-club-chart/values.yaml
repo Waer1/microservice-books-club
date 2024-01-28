@@ -1,0 +1,122 @@
+# Default values for nestjs.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+ingress:
+  enabled: true
+  name: nestjs-ms-ingress
+  env:
+    database: "off"
+  ingressController:
+    enabled: true
+    ingressClass: nginx
+    allowHttp: true
+    globalStaticIpName: kubernets-ip-static
+  paths:
+    - path: /
+      pathType: Prefix
+      name: api-gateway
+      port: 3000
+
+services:
+
+  # api service
+  - replicaCount: 2
+    name: api
+    nameSpace: books-club
+    image:
+      repository: waer/microservice-books-club-service
+      tag: latest
+      pullPolicy: IfNotPresent
+    deployment:
+      restartPolicy: Always
+    service:
+      name: api-gateway
+      type: ClusterIP
+      externalPort: 3000
+      internalPort: 3000
+    resources:
+      {}
+
+
+  # auth service
+  - replicaCount: 2
+    name: auth
+    nameSpace: books-club
+    image:
+      repository: waer/auth-service
+      tag: latest
+      pullPolicy: IfNotPresent
+    deployment:
+      restartPolicy: Always
+    # service:
+    #   name: auth-service
+    #   type: ClusterIP
+      # externalPort: 9001
+      # internalPort: 9001
+    resources:
+      {}
+
+# books service
+  - replicaCount: 2
+    name: files
+    nameSpace: books-club
+    image:
+      repository: waer/books-service
+      tag: latest
+      pullPolicy: IfNotPresent
+    deployment:
+      restartPolicy: Always
+    # service:
+    #   name: files-service
+    #   type: ClusterIP
+      # externalPort: 9003
+      # internalPort: 9003
+    resources: {}
+
+
+# # loki-stack:
+# #   loki:
+# #     enabled: true
+# #     replicas: 1
+# #     persistence:
+# #       enabled: false
+# #       storageClassName: ""
+# #       accessModes:
+# #         - ReadWriteOnce
+# #       size: 10Gi
+# #     service:
+# #       type: ClusterIP
+# #       port: 3100
+# #     extraArgs: {}
+# #   grafana:
+# #     enabled: true
+# #     replicas: 1
+# #     # grafana.ini:
+# #     #   server:
+# #     #     root_url: grafana.domain
+# #     # ingress:
+# #     #   enabled: true
+# #     #   hosts:
+# #     #     - grafana.domain
+# #     #   annotations:
+# #     #     kubernetes.io/ingress.class: "kong"
+# #     service:
+# #       enabled: true
+# #       type: NodePort
+# #       port: 80
+# #       targetPort: 3000
+# #     adminUser: admin
+# #     adminPassword: password
+# #   promtail:
+# #     enabled: false
+# #   fluent-bit:
+# #     enabled: true
+# #   prometheus:
+# #     enabled: false
+
+
+env:
+  name: app-env-var-secret
+  secret:
+    NODE_ENV: development
+    # Add more secrets as you like

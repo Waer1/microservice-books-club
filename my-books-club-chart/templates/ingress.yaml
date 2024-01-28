@@ -1,0 +1,23 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingress.name }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.ingressController.ingressClass }}
+    kubernetes.io/ingress.allow-http: {{ .Values.ingress.ingressController.allowHttp }}
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.ingressController.globalStaticIpName }}
+spec:
+  rules:
+  - http:
+      paths:
+      {{- range .Values.ingress.paths }}
+      - path: {{ .path }}
+        pathType: {{ .pathType }}
+        backend:
+          service:
+            name: {{ .name }}
+            port:
+              number: {{ .port }}
+      {{- end }}
+{{- end }}
