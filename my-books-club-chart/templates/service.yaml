@@ -19,7 +19,7 @@ spec:
     targetPort: {{ $value.service.internalPort }}
     protocol: TCP
 {{- end }}
-selector:
+  selector:
     app: "{{ $value.name }}"
     chart: "{{ $dot.Chart.Name }}"
     version: "{{ $dot.Chart.Version }}"

@@ -78,7 +78,7 @@ services:
     resources: {}
 
 env:
-  name: app-env-var-secret
+  name: app-env-secret
   secret:
     NODE_ENV: development
     # Add more secrets as you like
