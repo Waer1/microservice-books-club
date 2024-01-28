@@ -12,7 +12,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: "{{ $value.name }}"
+      app: {{ $value.name }}
       chart: "{{ $dot.Chart.Name }}"
       version: "{{ $dot.Chart.Version }}"
   replicas: {{ $value.replicaCount }}

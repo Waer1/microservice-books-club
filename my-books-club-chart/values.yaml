@@ -1,6 +1,10 @@
 # Default values for nestjs.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
+nameOverride: "books"
+namespace: books-club
+
 ingress:
   enabled: true
   name: nestjs-ms-ingress
@@ -78,4 +82,45 @@ env:
   secret:
     NODE_ENV: development
     # Add more secrets as you like
+
+    # Postgres DB
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_USERNAME: postgres
+    DB_PASSWORD: postgres
+    DB_NAME: books-db
+
+    # PostGres Auth DB
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_DB: books-db
+
+    # PGADMIN
+    PGADMIN_DEFAULT_EMAIL: waer@gmail.com
+    PGADMIN_DEFAULT_PASSWORD: postgres
+
+    # JWT
+    JWT_SECRET: secret
+    JWT_EXPIRATION: 15d
+    BCRYPT_SALT: 12
+
+    # RabbitMQ
+    RABBITMQ_DEFAULT_USER: user
+    RABBITMQ_DEFAULT_PASS: password
+    RABBITMQ_USER: user
+    RABBITMQ_PASS: password
+    RABBITMQ_HOST: rabbitmq:5672
+
+    # RabbitMQ Queues
+    RABBITMQ_AUTH_QUEUE: auth_queue
+    RABBITMQ_BOOKS_QUEUE: books_queue
+    RABBITMQ_USERS_QUEUE: users_queue
+    RABBITMQ_MONITORING_QUEUE: users_queue
+
+    # geocodio api key
+    GEOCODIO_API_KEY: 325c65754c3eb5c563e93ccc27b4b7452ab633e
+
+    # Redis
+    REDIS_PASS: password
+    REDIS_URI: redis://default:${REDIS_PASS}@redis:6379
 
