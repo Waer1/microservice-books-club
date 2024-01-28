@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { BooksServiceModule } from './books-service.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { SharedService } from '@app/shared';
 
