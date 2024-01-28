@@ -16,7 +16,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseurl}}/api/v1/books/find?id=44",
+							"raw": "{{baseurl}}/api/v1/books/find?id=5",
 							"host": [
 								"{{baseurl}}"
 							],
@@ -29,7 +29,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "44"
+									"value": "5"
 								}
 							]
 						}
@@ -88,7 +88,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseurl}}/api/v1/books/myBooks",
+							"raw": "{{baseurl}}/api/v1/books/Readinglist",
 							"host": [
 								"{{baseurl}}"
 							],
@@ -96,7 +96,7 @@
 								"api",
 								"v1",
 								"books",
-								"myBooks"
+								"Readinglist"
 							]
 						}
 					},
@@ -157,7 +157,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"bookId\": 78\r\n}",
+							"raw": "{\r\n    \"bookId\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -186,7 +186,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"BookId\":7,\r\n\"updates\": {\r\n      \"title\": \"wwwwwaaaeeerr waer gedan\"\r\n}\r\n}\r\n",
+							"raw": "{\r\n\"BookId\":7,\r\n\"updates\": {\r\n      \"title\": \"woowwaaaeeerr waer gedan\"\r\n}\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -215,7 +215,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\"BookId\":7,\r\n}\r\n",
+							"raw": "{\r\n\"BookId\":15\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -249,7 +249,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"elwaeryousef1@gmail.com\",\r\n    \"password\":\"12345678Aa+\"\r\n}",
+							"raw": "{\r\n    \"email\":\"elwaeryousef@gmail.com\",\r\n    \"password\":\"12345678Aa+\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -339,7 +339,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"waer\",\r\n    \"email\":\"elwaeryousef1@gmail.com\",\r\n    \"password\":\"12345678Aa+\",\r\n    \"firstName\":\"youssef\",\r\n    \"lastName\":\"waer\",\r\n    \"latitude\":40,\r\n    \"longitude\":30\r\n}",
+							"raw": "{\r\n    \"name\":\"waer\",\r\n    \"email\":\"elwaeryousef@gmail.com\",\r\n    \"password\":\"12345678Aa+\",\r\n    \"firstName\":\"youssef\",\r\n    \"lastName\":\"waer\",\r\n    \"latitude\":40,\r\n    \"longitude\":30\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
