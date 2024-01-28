@@ -4,9 +4,9 @@ kind: Ingress
 metadata:
   name: {{ .Values.ingress.name }}
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingress.ingressController.ingressClass }}
-    kubernetes.io/ingress.allow-http: {{ .Values.ingress.ingressController.allowHttp }}
-    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.ingressController.globalStaticIpName }}
+    kubernetes.io/ingress.class: "{{ .Values.ingress.ingressController.ingressClass }}"
+    kubernetes.io/ingress.allow-http: "{{ .Values.ingress.ingressController.allowHttp }}"
+    kubernetes.io/ingress.global-static-ip-name: "{{ .Values.ingress.ingressController.globalStaticIpName }}"
 spec:
   rules:
   - http:
