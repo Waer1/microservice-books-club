@@ -28,7 +28,7 @@ services:
       - ./db/data:/var/lib/postgresql/data
     networks:
       - books-club-network
-    
+
   postgres_admin:
     image: dpage/pgadmin4
     env_file:
@@ -108,4 +108,4 @@ services:
 
 networks:
   books-club-network:
-    name: books-club-network
+    driver: bridge

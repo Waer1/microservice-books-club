@@ -90,4 +90,4 @@ services:
 
 networks:
   books-club-network:
-    name: books-club-network
+    driver: bridge

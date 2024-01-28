@@ -7,7 +7,7 @@ ingress:
   env:
     database: "off"
   ingressController:
-    enabled: true
+    enabled: 'true'
     ingressClass: nginx
     allowHttp: true
     globalStaticIpName: kubernets-ip-static
@@ -58,7 +58,7 @@ services:
 
 # books service
   - replicaCount: 2
-    name: files
+    name: books
     nameSpace: books-club
     image:
       repository: waer/books-service
