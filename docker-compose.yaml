@@ -28,12 +28,7 @@ services:
       - ./db/data:/var/lib/postgresql/data
     networks:
       - books-club-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
-      timeout: 30s
-      retries: 5
-
+    
   postgres_admin:
     image: dpage/pgadmin4
     env_file:
@@ -49,6 +44,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/microservice-books-club/dockerfile.dev
+    restart: unless-stopped
     ports:
       - '3000:3000'
     env_file:
@@ -69,6 +65,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/auth-service/dockerfile.dev
+    restart: unless-stopped
     env_file:
       - .env
     depends_on:
@@ -84,6 +81,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/books-service/dockerfile.dev
+    restart: unless-stopped
     env_file:
       - .env
     depends_on:

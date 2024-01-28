@@ -23,8 +23,9 @@ import { join } from 'path';
           entities: [join(__dirname, '**', '*.entity.{ts,js}')],
           autoLoadEntities: true,
           synchronize: NODE_ENV !== 'production',
+          migrations: [join(__dirname, '**', 'migrations', '*.{ts,js}')],
           retryAttempts: 15, // Number of times to retry connecting
-          retryDelay: 5000, // Delay between connection retries (in milliseconds)
+          retryDelay: 10000, // Delay between connection retries (in milliseconds)
           connectTimeoutMS: 10000, // Connection timeout (in milliseconds)
         };
       },

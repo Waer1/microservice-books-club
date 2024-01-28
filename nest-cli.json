@@ -4,7 +4,7 @@
   "sourceRoot": "apps/microservice-books-club/src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true,
+    "webpack": false,
     "tsConfigPath": "apps/microservice-books-club/tsconfig.app.json"
   },
   "monorepo": true,

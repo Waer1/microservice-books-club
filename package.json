@@ -20,7 +20,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/microservice-books-club/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/microservice-books-club/test/jest-e2e.json",
+    "typeorm": "npx typeorm -d ./dist/apps/microservice-books-club/apps/microservice-books-club/src/db/data-source.js",
+    "generate:migration": "npm run typeorm -- migration:generate",
+    "run:migration": "npm run typeorm -- migration:run",
+    "revert:migration": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -47,7 +51,6 @@
     "prom-client": "^15.1.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "swagger-ui-express": "^5.0.0",
     "typeorm": "^0.3.19"
   },
   "devDependencies": {
