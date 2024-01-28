@@ -17,6 +17,7 @@ import { LoggingInterceptor } from '@app/shared/interceptors/logging.interceptor
       provide: 'APP_INTERCEPTOR',
       useClass: LoggingInterceptor,
     },
+
   ],
 })
 export class AppModule {}

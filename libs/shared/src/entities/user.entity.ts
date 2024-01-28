@@ -10,7 +10,6 @@ import {
   BeforeInsert,
   BeforeUpdate,
 } from 'typeorm';
-import { hash } from 'bcrypt';
 import { Book } from './book.entity';
 
 @Entity()
