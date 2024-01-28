@@ -38,9 +38,8 @@ he can do crud operations on the books in his lists and he can add books to his 
 ## arch diagram
 ![Alt text](./docs-images/image.png)
 
-
-
 ## the arch consists of 3 services:
+
 - auth service: responsible for authentication and authorization
 - books service: responsible for books CRUD operations
 - users service: responsible for users CRUD operations
@@ -48,7 +47,6 @@ he can do crud operations on the books in his lists and he can add books to his 
 ### the communication between the services is done using RabbitMQ queues
 
 ### the communication between the services and the database is done using TypeORM and PostgreSQL
-
 
 # Running the application
 
@@ -67,7 +65,6 @@ Before you can run this app, you need to have a PostgreSQL database set up. Crea
 NODE_ENV=development
 
 # Postgres DB
-# DB_HOST=127.0.0.1
 DB_HOST=postgres
 DB_PORT=5432
 DB_USERNAME=postgres
@@ -154,7 +151,7 @@ this will pull the image from docker hub and run it on your machine.
 
 now you can access the app on http://localhost:3000/ and have look at postman collection to test the api
 
-## Running with Docker using local code
+## Running by building Docker images using local code
 
 You can run the app by building the Docker image and then running the container.
 you can do this by running
@@ -175,8 +172,12 @@ you can setup the monitoring and logging by running the following command
     docker-compose -f docker-compose.yaml up
 ```
 
-now you can access promtheus on http://localhost:9090/ and grafana on http://localhost:3010/ and have look at postman collection to test the api
+now you can access promtheus on http://localhost:9090/ and grafana on http://localhost:3010/ also test the nodejs metrics on http://localhost:3000/api/v1/metrics
 with user name and password for grafana is waer and waer
+
+![Alt text](./docs-images/image_2024-01-27_22-27-47.png)
+
+![Alt text](./docs-images/image_2024-01-27_22-56-21.png)
 
 
 ## setup using helm
@@ -188,12 +189,19 @@ you can setup the app using helm by running the following command
     helm install books-club .
 ```
 
-for the communication between the services done using rabbitmq so remember to install rabbitmq and postgres before installing the chart and setup its envs in the values.yaml file
-or you can use external rabbitmq and postgresql by setting the values in the values.yaml file
+```bash
+  kubeclt get all -n books-club
+```
 
+this deploy assume you already have postgresql and rabbitmq running on your cluster and you will update its values in values file to match your cluster
+
+
+
+## Testing the application
+
+have a look at postman collection to test the api
 
 # Possible improvements
   - split the auth service into 2 services (auth service and users service)
   - add a service for the monitoring and logging
   - add a service for the geocodio api
-
